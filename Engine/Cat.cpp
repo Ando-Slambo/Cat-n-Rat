@@ -1,7 +1,7 @@
 #include "Cat.h"
 #include "Graphics.h"
 
-void Cat::Update(Keyboard& kbd)
+void Cat::Update(const Keyboard& kbd)
 {
 	x += kbd.KeyIsPressed(0x27) * speed;
 	x -= kbd.KeyIsPressed(0x25) * speed;
@@ -20,11 +20,21 @@ void Cat::Update(Keyboard& kbd)
 	}
 }
 
-bool Cat::Collision(int in_x, int in_y, int in_width, int in_height)
+int Cat::GetX()
 {
-	return
-		x < in_x + in_width &&
-		in_x < x + width &&
-		y < in_y + in_height &&
-		in_y < y + height;
+	return x;
+}
+
+int Cat::GetY()
+{
+	return y;
+}
+
+void Cat::Draw(Graphics& gfx) const
+{
+	for (int i = x; i < x + width; i++) {
+		for (int j = y; j < y + height; j++) {
+			gfx.PutPixel(i, j, 255, 255, 255);
+		}
+	}
 }

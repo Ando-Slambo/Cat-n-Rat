@@ -32,21 +32,10 @@ Game::Game(MainWindow& wnd)
 	std::uniform_int_distribution<int> xDist(50, 1900);
 	std::uniform_int_distribution<int> yDist(50, 1000);
 	std::uniform_int_distribution<int> vDist(-3, 3);
-	rat0.x = xDist(rng);
-	rat1.x = xDist(rng);
-	rat2.x = xDist(rng);
 
-	rat0.y = yDist(rng);
-	rat1.y = yDist(rng);
-	rat2.y = yDist(rng);
-
-	rat0.vx = vDist(rng);
-	rat1.vx = vDist(rng);
-	rat2.vx = vDist(rng);
-
-	rat0.vy = vDist(rng);
-	rat1.vy = vDist(rng);
-	rat2.vy = vDist(rng);
+	rat0.Initialize(xDist(rng), yDist(rng), vDist(rng), vDist(rng));
+	rat1.Initialize(xDist(rng), yDist(rng), vDist(rng), vDist(rng));
+	rat2.Initialize(xDist(rng), yDist(rng), vDist(rng), vDist(rng));
 }
 
 void Game::Go()
@@ -61,35 +50,16 @@ void Game::UpdateModel()
 {
 	cat.Update(wnd.kbd);
 
-	rat0.isAlive *= !cat.Collision(rat0.x, rat0.y, Rat::width, Rat::height);
-	rat1.isAlive *= !cat.Collision(rat1.x, rat1.y, Rat::width, Rat::height);
-	rat2.isAlive *= !cat.Collision(rat2.x, rat2.y, Rat::width, Rat::height);
-
-	rat0.Update();
-	rat1.Update();
-	rat2.Update();
+	rat0.Update(cat);
+	rat1.Update(cat);
+	rat2.Update(cat);
 }
 
 void Game::ComposeFrame()
 {
-	DrawBox(cat.x, cat.y, Cat::width, Cat::height, 255, 255, 255);
+	cat.Draw(gfx);
 
-	if (rat0.isAlive) {
-		DrawBox(rat0.x, rat0.y, Rat::width, Rat::height, 255, 0, 0);
-	}
-	if (rat1.isAlive) {
-		DrawBox(rat1.x, rat1.y, Rat::width, Rat::height, 255, 0, 0);
-	}
-	if (rat2.isAlive) {
-		DrawBox(rat2.x, rat2.y, Rat::width, Rat::height, 255, 0, 0);
-	}
-}
-
-void Game::DrawBox(int x, int y, int width, int height, int r, int g, int b)
-{
-	for (int i = x; i < x + width; i++) {
-		for (int j = y; j < y + height; j++) {
-			gfx.PutPixel(i, j, r, g, b);
-		}
-	}
+	rat0.Draw(gfx);
+	rat1.Draw(gfx);
+	rat2.Draw(gfx);
 }
